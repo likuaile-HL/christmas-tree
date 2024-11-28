@@ -3,7 +3,6 @@
 <head>
     <title>梦幻圣诞树</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         body {
             margin: 0;
@@ -14,8 +13,6 @@
             align-items: center;
             height: 100vh;
             width: 100vw;
-            position: fixed;
-            touch-action: none;
         }
         canvas {
             border-radius: 10px;
@@ -31,31 +28,8 @@
 
         // 设置画布大小为窗口大小
         function resizeCanvas() {
-            // 获取设备像素比
-            const dpr = window.devicePixelRatio || 1;
-            
-            // 设置画布的逻辑大小
-            const screenWidth = window.innerWidth;
-            const screenHeight = window.innerHeight;
-            
-            // 针对移动设备调整大小
-            if (screenWidth < 768) { // 移动设备
-                canvas.width = screenWidth - 20;
-                canvas.height = screenHeight - 20;
-                
-                // 调整树的比例
-                const scale = Math.min(screenWidth / 800, screenHeight / 600);
-                ctx.scale(scale, scale);
-            } else { // 桌面设备
-                canvas.width = Math.min(800, screenWidth - 20);
-                canvas.height = Math.min(600, screenHeight - 20);
-            }
-            
-            // 重新添加装饰品和彩灯
-            lights.length = 0;
-            ornaments.length = 0;
-            addLights();
-            addOrnaments();
+            canvas.width = Math.min(800, window.innerWidth - 20);
+            canvas.height = Math.min(600, window.innerHeight - 20);
         }
         
         resizeCanvas();
@@ -231,14 +205,14 @@
 
         // 添加装饰品
         function addOrnaments() {
-            const treeWidth = Math.min(200, canvas.width * 0.4);
-            const treeHeight = Math.min(300, canvas.height * 0.6);
+            const treeWidth = 200;
+            const treeHeight = 300;
             const centerX = canvas.width / 2;
-            const bottomY = canvas.height - canvas.height * 0.2;
+            const bottomY = canvas.height - 100;
 
             for (let y = 50; y < treeHeight; y += 40) {
                 const width = (treeWidth * (treeHeight - y)) / treeHeight;
-                const numOrnaments = Math.max(2, Math.floor(width / 50));
+                const numOrnaments = Math.floor(width / 50);
                 
                 for (let i = 0; i < numOrnaments; i++) {
                     const x = centerX - width/2 + (width / (numOrnaments-1)) * i;
@@ -249,14 +223,14 @@
 
         // 添加彩灯
         function addLights() {
-            const treeWidth = Math.min(200, canvas.width * 0.4);
-            const treeHeight = Math.min(300, canvas.height * 0.6);
+            const treeWidth = 200;
+            const treeHeight = 300;
             const centerX = canvas.width / 2;
-            const bottomY = canvas.height - canvas.height * 0.2;
+            const bottomY = canvas.height - 100;
 
             for (let y = 0; y < treeHeight; y += 20) {
                 const width = (treeWidth * (treeHeight - y)) / treeHeight;
-                const numLights = Math.max(2, Math.floor(width / 30));
+                const numLights = Math.floor(width / 30);
                 
                 for (let i = 0; i < numLights; i++) {
                     const x = centerX - width/2 + (width / (numLights-1)) * i;
@@ -293,54 +267,6 @@
             ctx.shadowBlur = 20;
             ctx.fill();
             
-            ctx.restore();
-        }
-
-        // 修改绘制雪地函数
-        function drawSnowGround() {
-            const groundHeight = 120;
-            
-            // 绘制基础雪地
-            ctx.fillStyle = '#fff';
-            ctx.beginPath();
-            ctx.moveTo(0, canvas.height - groundHeight);
-            
-            // 创建固定的起伏雪地效果
-            for(let x = 0; x <= canvas.width; x += 50) {
-                const height = groundHeight + Math.sin(x * 0.03) * 15;
-                // 移除随机值，使雪地保持静态
-                ctx.lineTo(x, canvas.height - height);
-            }
-            
-            ctx.lineTo(canvas.width, canvas.height);
-            ctx.lineTo(0, canvas.height);
-            ctx.closePath();
-            
-            // 添加雪地渐变
-            const groundGradient = ctx.createLinearGradient(
-                0, canvas.height - groundHeight,
-                0, canvas.height
-            );
-            groundGradient.addColorStop(0, '#ffffff');
-            groundGradient.addColorStop(0.3, '#f0f0f0');
-            groundGradient.addColorStop(1, '#e0e0e0');
-            ctx.fillStyle = groundGradient;
-            ctx.fill();
-            
-            // 添加固定的闪光点
-            ctx.save();
-            ctx.globalAlpha = 0.3;
-            for(let i = 0; i < 100; i++) {
-                // 使用固定的种子值生成固定位置的闪光点
-                const x = (i * 97) % canvas.width;
-                const y = canvas.height - groundHeight + ((i * 73) % groundHeight);
-                const size = ((i * 13) % 2) + 1;
-                
-                ctx.beginPath();
-                ctx.arc(x, y, size, 0, Math.PI * 2);
-                ctx.fillStyle = '#ffffff';
-                ctx.fill();
-            }
             ctx.restore();
         }
 
@@ -405,9 +331,6 @@
                 snowflake.draw();
             });
 
-            // 绘制雪地
-            drawSnowGround();
-
             // 绘制树
             drawTree();
             drawTopStar();
@@ -440,3 +363,5 @@
     </script>
 </body>
 </html> 
+
+
